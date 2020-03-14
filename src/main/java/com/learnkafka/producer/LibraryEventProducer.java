@@ -1,10 +1,13 @@
 package com.learnkafka.producer;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.Header;
+import org.apache.kafka.common.header.internals.RecordHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -65,9 +68,9 @@ public class LibraryEventProducer {
 	}
 
 	/**
-	 * Send a new library event to topic
-	 * This method response to send message to topic with headers
-	 * Event Asynchronous
+	 * Send a new library event to topic This method response to send message to
+	 * topic with headers Event Asynchronous
+	 * 
 	 * @param libraryEvent
 	 * @throws JsonProcessingException
 	 */
@@ -127,9 +130,21 @@ public class LibraryEventProducer {
 
 	}
 
+	/**
+	 * Method responsible to create ProduceRecord to send to kafka topic. In this
+	 * method I'm create a header for identify and future decisions in application
+	 * consumer.
+	 * 
+	 * @param key
+	 * @param value
+	 * @param topic
+	 * @return
+	 */
 	private ProducerRecord<Integer, String> buildProducerRecord(Integer key, String value, String topic) {
 
-		return new ProducerRecord<Integer, String>(topic, null, key, value, null);
+		List<Header> recordHeaders = List.of(new RecordHeader("event-source", "scanner".getBytes()));
+
+		return new ProducerRecord<Integer, String>(topic, null, key, value, recordHeaders);
 	}
 
 	private void handleFailure(Integer key, String value, Throwable ex) {
