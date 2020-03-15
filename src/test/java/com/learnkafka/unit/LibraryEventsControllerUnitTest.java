@@ -1,6 +1,7 @@
 package com.learnkafka.unit;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -29,14 +30,33 @@ public class LibraryEventsControllerUnitTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	private LibraryEventProducer libraryEventProducer;
-	
+
 	ObjectMapper objectMapper = new ObjectMapper();
+
+	@Test
+	void postLibraryEventError() throws Exception {
+
+		// given
+		Book book = Book.builder().id(null).author("Dilip").name(null).build();
+		LibraryEvent libraryEvent = LibraryEvent.builder().id(null).book(book).build();
+
+		String json = objectMapper.writeValueAsString(libraryEvent);
+
+		// expected
+		String message = "book.id - must not be null,book.name - must not be blank";
+
+		// When
+		mockMvc.perform(post("/v1/libraryevent").content(json).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is4xxClientError()).andExpect(content().string(message));
+
+	}
 
 	/**
 	 * Responsible to unit test method post
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -45,15 +65,13 @@ public class LibraryEventsControllerUnitTest {
 		// given
 		Book book = Book.builder().id(123).author("Dilip").name("Kafka using Spring Boot").build();
 		LibraryEvent libraryEvent = LibraryEvent.builder().id(null).book(book).build();
-		
+
 		String json = objectMapper.writeValueAsString(libraryEvent);
-		
-		//When
-		mockMvc.perform(post("/v1/libraryevent")
-				.content(json)
-				.contentType(MediaType.APPLICATION_JSON))
+
+		// When
+		mockMvc.perform(post("/v1/libraryevent").content(json).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isCreated());
-		
+
 	}
 
 }
