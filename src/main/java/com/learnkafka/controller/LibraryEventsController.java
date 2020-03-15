@@ -1,5 +1,7 @@
 package com.learnkafka.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,7 @@ public class LibraryEventsController {
 	 * @throws JsonProcessingException 
 	 */
 	@PostMapping("/v1/libraryevent")
-	public ResponseEntity<LibraryEvent> postLibraryEvent(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException{
+	public ResponseEntity<LibraryEvent> postLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException{
 		
 		libraryEvent.setEventType(LibraryEventType.NEW);
 		//libraryEventProducer.sendLibraryEvent(libraryEvent);
