@@ -1,5 +1,7 @@
-package com.learnkafka.unit;
+package com.learnkafka.unit.controller;
 
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -67,6 +69,7 @@ public class LibraryEventsControllerUnitTest {
 		LibraryEvent libraryEvent = LibraryEvent.builder().id(null).book(book).build();
 
 		String json = objectMapper.writeValueAsString(libraryEvent);
+		when(libraryEventProducer.sendLibraryEventWithoutDefaultTopic(isA(LibraryEvent.class)));
 
 		// When
 		mockMvc.perform(post("/v1/libraryevent").content(json).contentType(MediaType.APPLICATION_JSON))

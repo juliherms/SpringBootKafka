@@ -74,7 +74,7 @@ public class LibraryEventProducer {
 	 * @param libraryEvent
 	 * @throws JsonProcessingException
 	 */
-	public void sendLibraryEventWithoutDefaultTopic(LibraryEvent libraryEvent) throws JsonProcessingException {
+	public ListenableFuture<SendResult<Integer, String>> sendLibraryEventWithoutDefaultTopic(LibraryEvent libraryEvent) throws JsonProcessingException {
 
 		Integer key = libraryEvent.getId();
 		String value = objectMapper.writeValueAsString(libraryEvent);
@@ -95,6 +95,8 @@ public class LibraryEventProducer {
 				handleSuccess(key, value, result);
 			}
 		});
+		
+		return listenableFuture;
 
 	}
 
