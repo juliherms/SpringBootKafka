@@ -69,7 +69,7 @@ public class LibraryEventsControllerUnitTest {
 		LibraryEvent libraryEvent = LibraryEvent.builder().id(null).book(book).build();
 
 		String json = objectMapper.writeValueAsString(libraryEvent);
-		when(libraryEventProducer.sendLibraryEventWithoutDefaultTopic(isA(LibraryEvent.class)));
+		when(libraryEventProducer.sendLibraryEventWithoutDefaultTopic(isA(LibraryEvent.class))).thenReturn(null);
 
 		// When
 		mockMvc.perform(post("/v1/libraryevent").content(json).contentType(MediaType.APPLICATION_JSON))

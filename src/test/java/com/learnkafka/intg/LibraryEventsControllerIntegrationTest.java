@@ -70,9 +70,7 @@ public class LibraryEventsControllerIntegrationTest {
 	void postLibraryEvent() {
 
 		// given
-
 		Book book = Book.builder().id(123).author("Dilip").name("Kafka using Spring Boot").build();
-
 		LibraryEvent libraryEvent = LibraryEvent.builder().id(null).book(book).build();
 
 		HttpHeaders headers = new HttpHeaders();
